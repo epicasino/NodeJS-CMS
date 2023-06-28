@@ -16,11 +16,24 @@ const viewDepartments = () => {
   });
 };
 
-// const viewEmployees = () => {
-//   db.query(`SELECT * FROM employee`, (err, results) => {
-//     console.table(results)
-//   });
-// };
+const viewEmployees = () => {
+  db.query(`SELECT * FROM employee`, (err, results) => {
+    let tableContent = [];
+    const generateTable = () => {
+      results.forEach((result) => {
+        tableContent.push({
+          id: result.id,
+          first_name: result.first_name,
+          last_name: result.last_name,
+          role_id: result.role_id,
+          manager_id: result.manager_id,
+        });
+      });
+      printTable(tableContent);
+    };
+    generateTable();
+  });
+};
 
 const db = mysql.createConnection(
   {
@@ -39,6 +52,9 @@ const selectionMenu = () => {
         viewEmployees();
         break;
       case "View All Departments":
+        viewDepartments();
+        break;
+      case "View All Roles":
         viewDepartments();
         break;
     }
