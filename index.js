@@ -1,13 +1,20 @@
 const inquirer = require("inquirer");
-const questions = require('./lib/questions');
+const questions = require("./lib/questions");
 const mysql = require("mysql2");
+const { printTable } = require("console-table-printer");
 
-
-// const viewDepartments = () => {
-//   db.query(`SELECT * FROM department`, (err, results) => {
-//     console.table(results)
-//   })
-// }
+const viewDepartments = () => {
+  db.query(`SELECT * FROM department`, (err, results) => {
+    let tableContent = [];
+    const generateTable = () => {
+      results.forEach((result) => {
+        tableContent.push({ id: result.id, department_name: result.name });
+      });
+      printTable(tableContent);
+    };
+    generateTable();
+  });
+};
 
 // const viewEmployees = () => {
 //   db.query(`SELECT * FROM employee`, (err, results) => {
@@ -25,10 +32,9 @@ const db = mysql.createConnection(
   console.log(`Connected to the company_db database.`)
 );
 
-inquirer
-  .prompt(questions)
-  .then((response) => {
-    switch(response.mainMenu) {
+const selectionMenu = () => {
+  inquirer.prompt(questions).then((response) => {
+    switch (response.mainMenu) {
       case "View All Employees":
         viewEmployees();
         break;
@@ -36,6 +42,7 @@ inquirer
         viewDepartments();
         break;
     }
-    
   });
+};
 
+selectionMenu();
